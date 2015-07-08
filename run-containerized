@@ -46,7 +46,7 @@ fi
 cd $DOCKER_CONTEXT_DIR
 
 # Deduce a tag name for the container we're going to build based on the Jenkins job name
-DOCKER_TAG_NAME=$(echo $JOB_NAME | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9\-\_.]//')
+DOCKER_TAG_NAME=$(echo $JOB_NAME | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9\-\_.]//g')
 
 # copy stdout to a new fd so we can display and capture it
 exec 5>&1
