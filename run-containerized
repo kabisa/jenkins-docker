@@ -12,8 +12,11 @@ trap cleanupContainer EXIT
 
 function cleanupContainer() {
   if [ -n "$CID" ]; then
-    echo "Cleaning up docker container"
-    docker kill $CID > /dev/null
+    CONTAINER_RUNNING=$(docker inspect --format='{{.State.Running}}' $CID)
+    if [ $CONTAINER_RUNNING = "true" ]; then
+      echo "Cleaning up docker container"
+      docker kill $CID > /dev/null
+    fi
   fi
 }
 
