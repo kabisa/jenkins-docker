@@ -25,10 +25,17 @@ function abort() {
   exit 1
 }
 
+# DOCKER_OPTS is now deprecated in favor of DOCKER_RUN_OPTS.
+# If it is set assign it to DOCKER_RUN_OPTS and print a warning.
+if [ -n "$DOCKER_OPTS" ]; then
+  >&2 echo '$DOCKER_OPTS is deprecated, please use $DOCKER_RUN_OPTS'
+  DOCKER_RUN_OPTS=$DOCKER_OPTS
+fi
+
 # Forward the SSH agent to the Docker container, useful in combination with
 # https://wiki.jenkins-ci.org/display/JENKINS/SSH+Agent+Plugin
 if [[ -n $SSH_AUTH_SOCK ]]; then
-  DOCKER_OPTS="$DOCKER_OPTS -v $SSH_AUTH_SOCK:/tmp/auth.sock -e SSH_AUTH_SOCK=/tmp/auth.sock"
+  DOCKER_RUN_OPTS="$DOCKER_RUN_OPTS -v $SSH_AUTH_SOCK:/tmp/auth.sock -e SSH_AUTH_SOCK=/tmp/auth.sock"
 fi
 
 # Where to store cachable artifacts. Docker containers ran by this script get
@@ -65,7 +72,7 @@ DOCKER_IMG=$(echo "$BUILD" | tail -n 1 | rev | cut -d ' ' -f1 | rev)
 # We mount the jobs workspace under /workspace and a directory to store build
 # caches/artifacts under /cache.
 #
-# Additional Docker CLI options can be passed in by setting a DOCKER_OPTS environment
+# Additional Docker run CLI options can be passed in by setting a DOCKER_RUN_OPTS environment
 # variable.
 #
 # If the container contains a /usr/local/bin/init-container script we execute this first,
@@ -84,7 +91,7 @@ CID=$(docker run -it -d -v $WORKSPACE:/workspace \
                         -w /workspace \
                         -e 'CI=true' \
                         -e 'DISPLAY=:0' \
-                        $DOCKER_OPTS $DOCKER_IMG \
+                        $DOCKER_RUN_OPTS $DOCKER_IMG \
                         bash -c "INIT=/usr/local/bin/init-container ;\
                         [ -e \$INIT ] && \$INIT ;\
                         $@ ;\
