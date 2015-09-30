@@ -1,6 +1,6 @@
 # Jenkins + Docker = Awesome CI
 
-See the accompanying blog post [here](http://kabisa.nl/jenkins-docker-awesome-ci/) for more information.
+See the accompanying blog post [here](http://www.theguild.nl/jenkins-docker-awesome-ci/) for more information.
 
 ## How does it work?
 
