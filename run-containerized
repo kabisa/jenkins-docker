@@ -53,7 +53,7 @@ if [ ! -d "$DOCKER_CONTEXT_DIR" ]; then
   abort "No Dockerfile found at $DOCKER_CONTEXT_DIR"
 fi
 
-cd $DOCKER_CONTEXT_DIR
+cd "$DOCKER_CONTEXT_DIR"
 
 # Deduce a tag name for the container we're going to build based on the Jenkins job name
 DOCKER_TAG_NAME=$(echo $JOB_NAME | tr '[:upper:]' '[:lower:]' | sed 's/[^-a-z0-9_.]//g')
@@ -86,8 +86,8 @@ DOCKER_IMG=$(echo "$BUILD" | tail -n 1 | rev | cut -d ' ' -f1 | rev)
 # not trivial to cleanup the Docker container when the Jenkins job get's aborted if
 # containers are run in the foreground.
 set -x
-CID=$(docker run -it -d -v $WORKSPACE:/workspace \
-                        -v $BUILD_CACHE_DIR:/cache \
+CID=$(docker run -it -d -v "$WORKSPACE:/workspace" \
+                        -v "$BUILD_CACHE_DIR:/cache" \
                         -w /workspace \
                         -e 'CI=true' \
                         -e 'DISPLAY=:0' \
