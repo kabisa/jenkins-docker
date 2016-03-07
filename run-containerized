@@ -94,7 +94,7 @@ CID=$(docker run -it -d -v "$WORKSPACE:/workspace" \
                         $DOCKER_RUN_OPTS $DOCKER_IMG \
                         bash -c "INIT=/usr/local/bin/init-container ;\
                         [ -e \$INIT ] && \$INIT ;\
-                        $@ ;\
+                        $* ;\
                         JOB_RESULT=\$? ; chown -R $(id -u `whoami`) /workspace ;\
                         (exit \$JOB_RESULT)")
 set +x
