@@ -25,6 +25,10 @@ function abort() {
   exit 1
 }
 
+if [ $# -ne 1 ]; then
+  abort "$0 requires exactly one argument (of bash script)."
+fi
+
 # DOCKER_OPTS is now deprecated in favor of DOCKER_RUN_OPTS.
 # If it is set assign it to DOCKER_RUN_OPTS and print a warning.
 if [ -n "$DOCKER_OPTS" ]; then
