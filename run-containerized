@@ -15,6 +15,10 @@ function cleanupContainer() {
     CONTAINER_RUNNING=$(docker inspect --format='{{.State.Running}}' $CID)
     if [ $CONTAINER_RUNNING = "true" ]; then
       echo "Cleaning up docker container"
+
+      # In regular workflows this is done automatically, but when the job is aborted
+      # and the container is killed this cleanup won't happen, so do it here.
+      docker exec $CID chown -R $(id -u `whoami`) /workspace
       docker kill $CID > /dev/null
     fi
   fi
